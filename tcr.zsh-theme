@@ -127,6 +127,14 @@ function TCR_precmd {
 }
 add-zsh-hook precmd TCR_precmd
 
+ZSH_THEME_GIT_PROMPT_ADDED="%{$fg[green]%}✚"
+ZSH_THEME_GIT_PROMPT_MODIFIED="%{$fg[blue]%}✹"
+ZSH_THEME_GIT_PROMPT_DELETED="%{$fg[red]%}✖"
+ZSH_THEME_GIT_PROMPT_RENAMED="%{$fg[magenta]%}➜"
+ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg[yellow]%}═"
+ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[cyan]%}✭"
+ZSH_GIT_PROMPT_SHOW_STASH=1
+
 # backup
 # PROMPT=$'
 # %{$gray240%}[ %? %{$gray240%}] %n %s %m %~ %D %? %T %/ %M
@@ -144,13 +152,11 @@ function empty_space() {
     echo "  "
 }
 
-
-## finished (until..)
-RPROMPT='$vcs_info_msg_0_$(virtualenv_info) | %{$gray240%}%n%{$gray235%}.%{$gray240%}%*'
+RPROMPT='%{$gray240%}%n%{$gray235%}.%{$gray240%}%*'
 
 
 PROMPT='
-%{$orange%}%1~ %{$gray235%}[%{$gray240%}$(path_without_last_dir)%{$gray235%}]
+%{$orange%}%1~ %{$gray235%}[%{$gray240%}$(path_without_last_dir)%{$gray235%}] $(git_prompt_info) $(git_prompt_status) $(git_remote_status) $(git_repo_name) $(git_current_branch) $(git_prompt_short_sha) $(git_commits_ahead)
 %{$gray240%}$ '
 
 # PROMPT+=' %# '
