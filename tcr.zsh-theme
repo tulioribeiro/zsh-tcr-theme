@@ -12,9 +12,26 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1
 function virtualenv_info {
     [ $VIRTUAL_ENV ] && echo '('%F{blue}`basename $VIRTUAL_ENV`%f') '
 }
+
 PR_GIT_UPDATE=1
 
 setopt prompt_subst
+
+# print -P "git_prompt_info:  $(git_prompt_info)" 
+# print -P "parse_git_dirty:  $(parse_git_dirty)" 
+# print -P "git_remote_status:  $(git_remote_status)" 
+# print -P "git_current_branch:  $(git_current_branch)" 
+# print -P "git_commits_ahead:  $(git_commits_ahead)" 
+# print -P "git_commits_behind:  $(git_commits_behind)" 
+# print -P "git_prompt_ahead:  $(git_prompt_ahead)" 
+# print -P "git_prompt_behind:  $(git_prompt_behind)" 
+# print -P "git_prompt_remote:  $(git_prompt_remote)" 
+# print -P "git_prompt_short_sha:  $(git_prompt_short_sha)" 
+# print -P "git_prompt_long_sha:  $(git_prompt_long_sha)" 
+# print -P "git_prompt_status:  $(git_prompt_status)" 
+# print -P "git_current_user_name:  $(git_current_user_name)" 
+# print -P "git_current_user_email:  $(git_current_user_email)" 
+# print -P "git_repo_name:  $(git_repo_name)" 
 
 autoload -U add-zsh-hook
 autoload -Uz vcs_info
@@ -26,6 +43,12 @@ if [[ $terminfo[colors] -ge 256 ]]; then
     purple="%F{135}"
     hotpink="%F{161}"
     limegreen="%F{118}"
+
+    fc004="%F{004}"
+
+    gray235="%F{235}"
+    gray240="%F{240}"
+    gray250="%F{250}"
 else
     turquoise="%F{cyan}"
     orange="%F{yellow}"
@@ -33,6 +56,12 @@ else
     hotpink="%F{red}"
     limegreen="%F{green}"
 fi
+
+# print color palette, for debug
+# for i in {0..255}; do
+#     print -Pn "%K{$i}  %k%F{black}${(l:3::0:)i}%f "
+#     (( (i + 2) % 6 )) || print
+# done
 
 # enable VCS systems you use
 zstyle ':vcs_info:*' enable git svn
@@ -77,7 +106,7 @@ function TCR_preexec {
 add-zsh-hook preexec TCR_preexec
 
 function TCR_chpwd {
-    PR_GIT_UPDATE=1
+    PR_GIT_UPDATE=0
 }
 add-zsh-hook chpwd TCR_chpwd
 
@@ -98,6 +127,31 @@ function TCR_precmd {
 }
 add-zsh-hook precmd TCR_precmd
 
-PROMPT=$'
-%{$purple%}%n${PR_RST} @ %{$orange%}%m${PR_RST} in %{$limegreen%}%~${PR_RST} $vcs_info_msg_0_$(virtualenv_info)
-$ '
+# backup
+# PROMPT=$'
+# %{$gray240%}[ %? %{$gray240%}] %n %s %m %~ %D %? %T %/ %M
+# %{$purple%}%n${PR_RST} @ %{$orange%}%m${PR_RST} in %{$limegreen%}%~${PR_RST} $vcs_info_msg_0_$(virtualenv_info)
+# 💩 '
+
+setopt PROMPT_SUBST
+
+function path_without_last_dir() {
+    local path="${PWD/#$HOME/~}"  # Replace the home directory path with ~
+    echo "${path%/*}"  # Remove the last directory
+}
+
+function empty_space() {
+    echo "  "
+}
+
+
+## finished (until..)
+RPROMPT='%{$gray240%}%n%{$gray235%}.%{$gray240%}%*'
+
+
+PROMPT='
+%{$orange%}%1~ %{$gray235%}[%{$gray240%}$(path_without_last_dir)%{$gray235%}] $vcs_info_msg_0_$(virtualenv_info) 
+%{$gray240%}$ '
+
+# PROMPT+=' %# '
+
