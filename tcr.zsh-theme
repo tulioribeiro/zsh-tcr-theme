@@ -49,7 +49,7 @@ function git_print_details() {
 }
 
 
-functio nvm_info() {
+function nvm_info() {
     if [[ -n $NVM_BIN ]]; then
         echo "$(empty_space)$BLOCK_BEFORE%{$gray240%}node v$(nvm_prompt_info)$BLOCK_AFTER"
     fi
